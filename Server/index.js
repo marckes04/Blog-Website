@@ -19,6 +19,11 @@ app.use(cors());
 // 4. Convertir body a objeto js (Para recibir JSON)
 app.use(express.json());
 
+const rutas_articulo = require("./routes/Articulo");
+
+// Cargar rutas
+app.use("/api", rutas_articulo);
+
 
 // 5. Rutas
 app.get("/probando", (req, res) => {
