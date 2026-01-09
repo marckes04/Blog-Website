@@ -2,18 +2,16 @@ const mongoose = require("mongoose");
 
 const conexion = async () => {
     try {
-        // Esperamos a que se conecte
-        await mongoose.connect("mongodb://localhost:27017/mi_blog");
-        
-        // ¡IMPORTANTE! Un mensaje para saber si funcionó
+        // CAMBIO CRUCIAL: Quita "localhost" y pon "127.0.0.1"
+        // Esto obliga a usar la dirección IP directa y no falla nunca.
+        await mongoose.connect("mongodb://127.0.0.1:27017/mi_blog"); 
+
         console.log("Conectado correctamente a la base de datos: mi_blog !!");
     
-    } catch (error) { // <--- Agregamos (error) aquí para poder leerlo
+    } catch (error) {
         console.log(error);
         throw new Error("No se pudo conectar a la base de datos");
     }
 }
 
-module.exports = {
-    conexion
-}
+module.exports = { conexion }
