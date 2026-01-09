@@ -8,6 +8,7 @@ router.get("/curso", ArticuloControlador.curso);
 
 router.post("/crear", ArticuloControlador.crear);
 router.get("/articulos", ArticuloControlador.listar);
+router.get("/articulo/:id", ArticuloControlador.uno);
 
 
 module.exports = router;
