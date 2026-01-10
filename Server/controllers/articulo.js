@@ -3,6 +3,7 @@ const Articulo = require("../model/Articulo"); // Asegúrate de que la ruta sea 
 const { validarArticulo } = require("../helpers/validar");
 const fs = require("fs");
 const path = require("path");
+const { error } = require("console");
 
 const prueba = (req, res) => {
     return res.status(200).json({
@@ -198,6 +199,39 @@ const imagen = (req, res) => {
     });
 }
 
+const buscar = (req,res) => {
+    // Sacar el string de busqueda
+    let busqueda = req.params.busqueda;
+    // Find 
+    Articulo.find({"$or":[
+        {"titulo":{"$regex":busqueda, "$options":"i"}},
+        {"contenido":{"$regex":busqueda, "$options":"i"}},
+    ]})
+    //Orden
+
+.sort({fecha:-1})
+.exec((error,articulosEncontrados) =>{
+    if(error || !articulosEncontrados|| articulosEncontrados.length <= 0)
+    {
+        return res.status(404). json({
+            status:"error",
+            mensaje:"No se han encontrado articulos"
+        })
+    }
+
+    return res.status(200).json({
+        status: "success",
+        articulos:articulosEncontrados
+    })
+});
+
+
+    //Ejecutar Consulta
+
+    // Devolver Resultado
+} 
+
+
 module.exports = {
     prueba,
     curso,
@@ -207,5 +241,6 @@ module.exports = {
     borrar,
     editar,
     subir,
-    imagen
+    imagen,
+    buscar
 }
