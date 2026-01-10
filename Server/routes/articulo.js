@@ -30,9 +30,7 @@ router.get("/articulos/:id", ArticuloControlador.listar);
 router.get("/articulo/:id", ArticuloControlador.uno);
 router.delete("/articulo/:id", ArticuloControlador.borrar);
 router.put("/articulo/:id", ArticuloControlador.editar);
-
-// RUTA DE SUBIDA DE IMAGEN
-// Usamos .any() para evitar el error "Unexpected field" si te equivocas en Postman
 router.post("/subir-imagen/:id", subidas.any(), ArticuloControlador.subir);
+router.get("/imagen/:fichero", ArticuloControlador.imagen)
 
 module.exports = router;

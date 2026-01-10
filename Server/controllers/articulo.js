@@ -1,5 +1,5 @@
 const validator = require("validator");
-const Articulo = require("../model/Articulo"); // Asegúrate de que la carpeta sea 'model' o 'models'
+const Articulo = require("../model/Articulo"); // Asegúrate de que la ruta sea correcta
 const { validarArticulo } = require("../helpers/validar");
 const fs = require("fs");
 const path = require("path");
@@ -106,7 +106,7 @@ const editar = async (req, res) => {
     }
 }
 
-// --- FUNCIÓN DE SUBIDA DE IMAGEN ARREGLADA ---
+// --- FUNCIÓN SUBIR CORREGIDA ---
 const subir = async (req, res) => {
     
     // 1. Recoger el archivo (Soporte para .any() y .single())
@@ -134,52 +134,68 @@ const subir = async (req, res) => {
     let extension = extension_split[extension_split.length - 1].toLowerCase();
 
     // 5. Comprobar extensión correcta
-    if(extension != "png" && extension != "jpg" && extension != "jpeg" && extension != "gif"){
+    if (extension != "png" && extension != "jpg" && extension != "jpeg" && extension != "gif") {
         
         // Borrar el archivo subido si no es válido
-        // fs.unlink borra el archivo físico de la carpeta
         fs.unlink(archivo.path, (error) => {
             return res.status(400).json({
                 status: "error",
                 mensaje: "Extensión de la imagen inválida"
             });
         });
-        return; // Paramos la ejecución para que no guarde en BD
-    }
+        
+    } else {
+        // 6. Si la imagen es correcta, guardar en la BD
+        try {
+            let articuloId = req.params.id;
 
-    // 6. Si la imagen es correcta, guardar en BD
-    let articuloId = req.params.id;
+            // CORRECCIÓN: Usamos await en lugar de callback y arreglamos la sintaxis del objeto update
+            const articuloActualizado = await Articulo.findOneAndUpdate(
+                { _id: articuloId }, 
+                { imagen: nombreArchivo }, // Aquí estaba el error de sintaxis req.{...}
+                { new: true }
+            );
 
-    try {
-        // Buscamos y actualizamos
-        const articuloActualizado = await Articulo.findOneAndUpdate(
-            {_id: articuloId}, 
-            {imagen: nombreArchivo}, // Guardamos el nombre del archivo en el campo 'imagen'
-            {new: true}
-        );
+            if (!articuloActualizado) {
+                return res.status(404).json({
+                    status: "error",
+                    mensaje: "El artículo no existe, no se pudo guardar la imagen"
+                });
+            }
 
-        if(!articuloActualizado){
-            return res.status(404).json({
+            return res.status(200).json({
+                status: "success",
+                articulo: articuloActualizado,
+                fichero: archivo
+            });
+
+        } catch (error) {
+            return res.status(500).json({
                 status: "error",
-                mensaje: "Error al guardar la imagen en la BD (ID no existe)"
+                mensaje: "Error al actualizar la imagen en la base de datos",
+                error: error.message
             });
         }
-
-        // Devolvemos respuesta de éxito
-        return res.status(200).json({
-            status: "success",
-            mensaje: "Imagen subida correctamente",
-            articulo: articuloActualizado,
-            fichero: archivo
-        });
-
-    } catch (error) {
-        return res.status(500).json({ 
-            status: "error", 
-            mensaje: "Error en el servidor al subir imagen", 
-            error: error.message 
-        });
     }
+}
+
+// --- FUNCIÓN IMAGEN CORREGIDA ---
+const imagen = (req, res) => {
+    let fichero = req.params.fichero;
+    // CORRECCIÓN: Usar path.join es más seguro para evitar errores de barras / o \
+    let ruta_fisica = path.join("./images/articles", fichero); 
+
+    // CORRECCIÓN: fs.stat comprueba si existe y si es un archivo
+    fs.stat(ruta_fisica, (error, stats) => {
+        if (!error && stats.isFile()) {
+            return res.sendFile(path.resolve(ruta_fisica));
+        } else {
+            return res.status(404).json({
+                status: "error",
+                mensaje: "La imagen no existe"
+            });
+        }
+    });
 }
 
 module.exports = {
@@ -190,5 +206,6 @@ module.exports = {
     uno,
     borrar,
     editar,
-    subir
+    subir,
+    imagen
 }
