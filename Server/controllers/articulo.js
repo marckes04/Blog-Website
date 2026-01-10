@@ -1,5 +1,8 @@
 const validator = require("validator");
-const Articulo = require("../model/Articulo");
+const Articulo = require("../model/Articulo"); // Asegúrate de que la carpeta sea 'model' o 'models'
+const { validarArticulo } = require("../helpers/validar");
+const fs = require("fs");
+const path = require("path");
 
 const prueba = (req, res) => {
     return res.status(200).json({
@@ -12,34 +15,15 @@ const curso = (req, res) => {
         curso: "Master en Frameworks JS",
         autor: "Mario Espitia",
         url: "marioespitia.com"
-    },
-    {
-        curso: "Master en React",
-        autor: "Mario Espitia",
-        url: "marioespitia.com"
     }]);
 }
 
 const crear = async (req, res) => {
-    // Recoger parámetros
     let parametros = req.body;
 
     try {
-        // --- VALIDACIÓN ---
-        if (!parametros || !parametros.titulo || !parametros.contenido) {
-            throw new Error("Faltan datos por enviar");
-        }
-
-        let validar_titulo = !validator.isEmpty(parametros.titulo) &&
-            validator.isLength(parametros.titulo, { min: 5, max: undefined });
-
-        let validar_contenido = !validator.isEmpty(parametros.contenido);
-
-        if (!validar_titulo || !validar_contenido) {
-            throw new Error("El título o contenido no son válidos");
-        }
-
-        // --- GUARDADO ---
+        validarArticulo(parametros);
+        
         const articulo = new Articulo(parametros);
         const articuloGuardado = await articulo.save();
 
@@ -60,16 +44,11 @@ const crear = async (req, res) => {
 
 const listar = async (req, res) => {
     try {
-        // Preparamos la consulta
         let consulta = Articulo.find({});
-
         if (req.params.ultimos) {
             consulta.limit(3);
         }
-
         consulta.sort({ fecha: -1 });
-
-        // Ejecutamos la consulta con AWAIT
         const articulos = await consulta.exec();
 
         if (!articulos || articulos.length === 0) {
@@ -78,132 +57,130 @@ const listar = async (req, res) => {
                 mensaje: "No se han encontrado artículos!!"
             });
         }
-
-        return res.status(200).send({
-            status: "success",
-            articulos
-        });
-
+        return res.status(200).send({ status: "success", articulos });
     } catch (error) {
-        return res.status(500).json({
-            status: "error",
-            mensaje: "Error al realizar la consulta",
-            error: error.message
-        });
+        return res.status(500).json({ status: "error", mensaje: "Error consulta", error: error.message });
     }
 }
 
 const uno = async (req, res) => {
     try {
         let id = req.params.id;
-
-        // Buscamos con AWAIT
         const articulo = await Articulo.findById(id);
-
         if (!articulo) {
-            return res.status(404).json({
-                status: "error",
-                mensaje: "No se ha encontrado el artículo!!"
-            });
+            return res.status(404).json({ status: "error", mensaje: "No existe el artículo" });
         }
-
-        return res.status(200).json({
-            status: "success",
-            articulo
-        });
-
+        return res.status(200).json({ status: "success", articulo });
     } catch (error) {
-        return res.status(500).json({
-            status: "error",
-            mensaje: "Error al buscar el artículo",
-            error: error.message
-        });
+        return res.status(500).json({ status: "error", mensaje: "Error al buscar", error: error.message });
     }
 }
 
-// ⚠️ CORREGIDO: Convertido a ASYNC/AWAIT y arregladas las llaves
 const borrar = async (req, res) => {
     try {
         let articuloId = req.params.id;
-
-        // Usamos findOneAndDelete con AWAIT (sin callback)
         const articuloBorrado = await Articulo.findOneAndDelete({ _id: articuloId });
-
         if (!articuloBorrado) {
-            return res.status(404).json({
-                status: "error",
-                mensaje: "No se ha encontrado el artículo para borrar"
-            });
+            return res.status(404).json({ status: "error", mensaje: "No existe para borrar" });
         }
-
-        return res.status(200).json({
-            status: "success",
-            articulo: articuloBorrado,
-            mensaje: "Método borrar artículo"
-        });
-
+        return res.status(200).json({ status: "success", articulo: articuloBorrado });
     } catch (error) {
-        return res.status(500).json({
-            status: "error",
-            mensaje: "Error al borrar el artículo",
-            error: error.message
-        });
+        return res.status(500).json({ status: "error", mensaje: "Error al borrar", error: error.message });
     }
 }
 
 const editar = async (req, res) => {
-    // 1. Recoger ID y Datos
     let articuloId = req.params.id;
     let parametros = req.body;
-
     try {
-        // --- VALIDACIÓN ---
-        // Validar si parametros existe primero
-        if (!parametros || Object.keys(parametros).length === 0) {
-            throw new Error("No has enviado datos en el Body");
-        }
-
-        let validar_titulo = !validator.isEmpty(parametros.titulo) &&
-            validator.isLength(parametros.titulo, { min: 5, max: undefined });
-
-        let validar_contenido = !validator.isEmpty(parametros.contenido);
-
-        if (!validar_titulo || !validar_contenido) {
-            throw new Error("La validación falló: Título (min 5 letras) o Contenido incorrectos.");
-        }
-
-        // --- ACTUALIZAR ---
+        validarArticulo(parametros);
         const articuloActualizado = await Articulo.findOneAndUpdate(
-            { _id: articuloId }, 
-            parametros, 
-            { new: true } 
+            { _id: articuloId }, parametros, { new: true }
         );
-
         if (!articuloActualizado) {
-            return res.status(404).json({
-                status: "error",
-                mensaje: "No existe un artículo con ese ID para editar"
-            });
+            return res.status(404).json({ status: "error", mensaje: "No existe para editar" });
         }
-
-        return res.status(200).json({
-            status: "success",
-            articulo: articuloActualizado,
-            mensaje: "Artículo actualizado con éxito"
-        });
-
+        return res.status(200).json({ status: "success", articulo: articuloActualizado });
     } catch (error) {
-        // ⚠️ IMPORTANTE: Mira la terminal de VS Code cuando falle
-        console.log("\n❌ ERROR EN EDITAR:", error); 
-
-        return res.status(400).json({
-            status: "error",
-            mensaje: "Error al actualizar el artículo",
-            motivo: error.message // Esto te dirá qué pasó en Postman
-        });
+        return res.status(400).json({ status: "error", mensaje: "Error editar", motivo: error.message });
     }
 }
 
+// --- FUNCIÓN DE SUBIDA DE IMAGEN ARREGLADA ---
+const subir = async (req, res) => {
+    
+    // 1. Recoger el archivo (Soporte para .any() y .single())
+    let archivo = null;
+
+    if (req.files && req.files.length > 0) {
+        archivo = req.files[0];
+    } else if (req.file) {
+        archivo = req.file;
+    }
+
+    // 2. Si no hay archivo, devolvemos error
+    if (!archivo) {
+        return res.status(404).json({
+            status: "error",
+            mensaje: "Petición inválida, no has enviado ninguna imagen"
+        });
+    }
+
+    // 3. Conseguir el nombre del archivo
+    let nombreArchivo = archivo.filename;
+
+    // 4. Sacar la extensión del archivo
+    let extension_split = nombreArchivo.split('\.');
+    let extension = extension_split[extension_split.length - 1].toLowerCase();
+
+    // 5. Comprobar extensión correcta
+    if(extension != "png" && extension != "jpg" && extension != "jpeg" && extension != "gif"){
+        
+        // Borrar el archivo subido si no es válido
+        // fs.unlink borra el archivo físico de la carpeta
+        fs.unlink(archivo.path, (error) => {
+            return res.status(400).json({
+                status: "error",
+                mensaje: "Extensión de la imagen inválida"
+            });
+        });
+        return; // Paramos la ejecución para que no guarde en BD
+    }
+
+    // 6. Si la imagen es correcta, guardar en BD
+    let articuloId = req.params.id;
+
+    try {
+        // Buscamos y actualizamos
+        const articuloActualizado = await Articulo.findOneAndUpdate(
+            {_id: articuloId}, 
+            {imagen: nombreArchivo}, // Guardamos el nombre del archivo en el campo 'imagen'
+            {new: true}
+        );
+
+        if(!articuloActualizado){
+            return res.status(404).json({
+                status: "error",
+                mensaje: "Error al guardar la imagen en la BD (ID no existe)"
+            });
+        }
+
+        // Devolvemos respuesta de éxito
+        return res.status(200).json({
+            status: "success",
+            mensaje: "Imagen subida correctamente",
+            articulo: articuloActualizado,
+            fichero: archivo
+        });
+
+    } catch (error) {
+        return res.status(500).json({ 
+            status: "error", 
+            mensaje: "Error en el servidor al subir imagen", 
+            error: error.message 
+        });
+    }
+}
 
 module.exports = {
     prueba,
@@ -212,5 +189,6 @@ module.exports = {
     listar,
     uno,
     borrar,
-    editar
+    editar,
+    subir
 }
