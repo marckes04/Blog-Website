@@ -2,6 +2,9 @@ import React from 'react'
 
 export const Header = () => {
   return (
-    <div>Header</div>
-  )
+    <header>
+        <h1 class = "Main-title">Mis Blogs</h1>
+    </header>
+
+    )
 }

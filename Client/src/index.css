@@ -1,69 +1,437 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* =========================================
+   1. CONFIGURACIÓN DARK MODE Y FUENTES
+   ========================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    background-color: #121212; /* Fondo casi negro */
+    font-family: 'Poppins', sans-serif;
+    color: #e0e0e0; /* Texto blanco suave (no quema la vista) */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Layout Principal */
+.layout {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #1e1e1e; /* Gris oscuro para el contenedor */
+    min-height: 100vh;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5); /* Sombra negra profunda */
+    
+    display: grid;
+    grid-template-areas: 
+        "header header"
+        "nav nav"
+        "content lateral"
+        "footer footer";
+    grid-template-columns: 1fr 340px;
+    grid-template-rows: auto auto 1fr auto;
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* =========================================
+   2. HEADER (Cabecera Oscura)
+   ========================================= */
+header {
+    grid-area: header;
+    background: #1e1e1e;
+    padding: 35px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #333; /* Separador sutil */
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+header h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    /* Efecto de texto NEÓN */
+    color: #fff;
+    text-shadow: 0 0 10px rgba(11, 112, 225, 0.7); 
+    text-transform: uppercase;
+    text-align:center;
+    width:100%;
+
+}
+
+
+
+/* =========================================
+   3. NAV (Menú con estilo Neon)
+   ========================================= */
+.nav {
+    grid-area: nav;
+    background: #181818;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.nav li a {
+    display: block;
+    padding: 20px 30px;
+    color: #bbb;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+/* Efecto Hover Brillante */
+.nav li a:hover {
+    color: #fff;
+    background-color: #252525;
+    border-bottom: 3px solid #0b70e1;
+    text-shadow: 0 0 8px rgba(11, 112, 225, 0.8);
+}
+
+/* =========================================
+   4. CONTENT (Contenido Principal)
+   ========================================= */
+/* Si tienes una clase para el contenedor de artículos, asegúrate de que use estos colores */
+.content {
+    grid-area: content;
+    padding: 30px;
+    background: #1e1e1e;
+}
+
+/* =========================================
+   5. SIDEBAR (Lateral Dark)
+   ========================================= */
+.lateral {
+    grid-area: lateral;
+    background: #181818; /* Un poco más oscuro que el contenido */
+    padding: 30px;
+    border-left: 2px solid #2c2c2c;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Tarjetas (Widgets) */
+.articulo-item,
+.search, .add {
+    background: #252525; /* Gris medio */
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border: 1px solid #333;
+}
+
+/* Contenedor principal de cada tarjeta */
+/* Tarjeta Principal */
+.articulo-item {
+    background: #1e1e1e;
+    border-radius: 15px;
+    border: 1px solid #333;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+    
+    /* Importante: permite que los hijos se acomoden en bloque */
+    display: flex;
+    flex-direction: column;
+}
+
+.articulo-item:hover {
+    transform: translateY(-5px);
+    border-color: #0b70e1; /* Detalle neón al pasar el mouse */
+}
+
+/* --- ZONA 1: TÍTULO (ARRIBA) --- */
+.encabezado {
+    width: 100%;
+    border-bottom: 1px solid #333; /* Una línea sutil debajo del título */
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+
+.title {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* Efecto de texto brillante */
+    text-shadow: 0 0 10px rgba(11, 112, 225, 0.4); 
+}
+
+/* --- ZONA 2: CUERPO (Fila Flexible) --- */
+.cuerpo {
+    display: flex;           /* Pone la imagen y el texto en la misma línea */
+    flex-direction: row;     /* Dirección horizontal */
+    align-items: flex-start; /* Alineados arriba */
+    gap: 20px;               /* Espacio entre imagen y texto */
+}
+
+/* La Imagen */
+.mascara {
+    width: 180px;            /* Ancho fijo */
+    height: 120px;           /* Alto fijo */
+    flex-shrink: 0;          /* Que no se encoja */
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #444;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.mascara img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* El Texto (Párrafo + Botones) */
+.datos {
+    flex-grow: 1;            /* Ocupa el resto del espacio */
+    display: flex;
+    flex-direction: column;  /* Texto arriba, botones abajo */
+    justify-content: space-between;
+    height: 100%;            /* Para aprovechar la altura de la imagen */
+}
+
+.description {
+    color: #ccc;
+    font-size: 1rem;
+    margin: 0;
+    margin-bottom: 15px;     /* Espacio antes de los botones */
+    line-height: 1.6;
+}
+
+/* --- ZONA 3: BOTONES --- */
+.acciones {
+    display: flex;
+    gap: 10px;
+}
+
+/* Tus botones estilo Neón */
+.button {
+    padding: 8px 20px;
+    background: transparent;
+    border: 2px solid #0b70e1; 
+    border-radius: 50px;
+    color: #0b70e1;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    background: #0b70e1;
+    color: white;
+    box-shadow: 0 0 15px rgba(11, 112, 225, 0.6);
+}
+
+/* Color especial para el botón borrar */
+.button.delete {
+    border-color: #d32f2f;
+    color: #d32f2f;
+}
+
+.button.delete:hover {
+    background: #d32f2f;
+    color: white;
+    box-shadow: 0 0 15px rgba(211, 47, 47, 0.6);
+}
+
+/* RESPONSIVE: En móvil, la imagen vuelve arriba */
+@media (max-width: 600px) {
+    .cuerpo {
+        flex-direction: column; /* Cambia a vertical en celulares */
+    }
+    .mascara {
+        width: 100%;
+        height: 180px;
+    }
+}
+
+.title {
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    color: #0b70e1; /* Azul neón */
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* --- INPUTS ESTILIZADOS (Dark Mode) --- */
+.lateral input[type="text"],
+.lateral textarea {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #121212; /* Fondo negro inputs */
+    border: 2px solid #333;
+    border-radius: 8px;
+    color: white; /* Texto blanco al escribir */
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s;
+}
+
+/* Foco en Inputs (Brillo azul) */
+.lateral input[type="text"]:focus,
+.lateral textarea:focus {
+    border-color: #0b70e1;
+    box-shadow: 0 0 15px rgba(11, 112, 225, 0.2);
+}
+
+.lateral textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.edit,
+.delete,
+.button 
+{
+    /* 1. ESPACIO Y TAMAÑO */
+    margin-top: 20px;        /* Baja el botón */
+    width: fit-content;      /* El ancho se ajusta al texto (NO al 100%) */
+    display: block;          /* Necesario para poder centrarlo */
+    margin-left: auto;       /* Truco para centrar horizontalmente */
+    margin-right: auto;
+    /* 2. ESTÉTICA (Lo que ya tenías) */
+    padding: 10px 25px;      /* Un poco más de aire a los lados queda mejor */
+    color: #0b70e1;
+    background: transparent;
+    border: 2px solid #0b70e1; 
+    border-radius: 50px;     /* Bordes redondos estilo "pill" */
+    
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.jumbo{
+    width:85%;
+    padding: 55px;
+    padding-bottom: 75px;
+    background:gray ;
+    border-radius: 10px;
+    box-shadow: 0px 0px 6px #ddd;
+    margin: 25px auto;
+}
+
+.jumbo h1{
+    font-size: 35px;
+    color: #444;
+    text-align: center;
+}
+
+.jumbo p{
+    display: block;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+/* Efecto Hover (Imprescindible) */
+.button:hover {
+    background: #0b70e1;
+    color: white;
+    box-shadow: 0 0 15px rgba(11, 112, 225, 0.6);
+    transform: translateY(-3px);
+}
+.lateral button,
+.lateral input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    
+    /* Fondo transparente para resaltar el borde */
+    background: transparent; 
+    color: #0b70e1;
+    
+    /* EL BORDE QUE PEDISTE */
+    border: 2px solid #0b70e1; 
+    border-radius: 50px; /* Bordes muy redondos */
+    
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    letter-spacing: 1px;
+}
+
+/* Efecto Hover en Botones (Se rellenan) */
+.lateral button:hover,
+.lateral input[type="submit"]:hover {
+    background: #0b70e1;
+    color: white;
+    box-shadow: 0 0 20px rgba(11, 112, 225, 0.6); /* Brillo NEÓN intenso */
+    transform: scale(1.02); /* Crece un poquito */
+}
+
+/* =========================================
+   6. FOOTER (Pie de página)
+   ========================================= */
+.footer {
+    grid-area: footer;
+    background: #111; /* Negro casi puro */
+    color: #777;
+    text-align: center;
+    padding: 40px;
+    font-size: 0.9rem;
+    margin-top: auto;
+    border-top: 2px solid #222;
+}
+
+.footer a {
+    color: #0b70e1;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.footer a:hover {
+    color: white;
+    text-shadow: 0 0 10px #0b70e1;
+}
+
+/* =========================================
+   7. RESPONSIVE
+   ========================================= */
+@media (max-width: 850px) {
+    .layout {
+        width: 100%;
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "header"
+            "nav"
+            "content"
+            "lateral"
+            "footer";
+        border: none;
+    }
+
+    .lateral {
+        border-left: none;
+        border-top: 2px solid #333;
+    }
 }
