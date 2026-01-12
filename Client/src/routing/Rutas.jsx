@@ -22,7 +22,7 @@ export const Rutas = () => {
                     <Route path="/articulos" element={<Articulos />} />
                 </Routes>
             </section>
-            h1
+            
                     <Sidebar/>
             {/* Aquí iría tu Footer */}
                     <Footer/>

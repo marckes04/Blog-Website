@@ -1,64 +1,78 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Global } from "../../helpers/Global";
 
 export const Articulos = () => {
-  const [articulos, SetArticulos] = useState([]);
+  // Convención: usa camelCase para los setters (setArticulos)
+  const [articulos, setArticulos] = useState([]);
+  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    let data = [
-      {
-        _id: 1,
-        titulo: "Titulo 1",
-        Contenido: "Contenido",
-      },
-      {
-        _id: 2,
-        titulo: "Titulo 2",
-        Contenido: "Contenido",
-      },
-      {
-        _id: 3,
-        titulo: "Titulo 3",
-        Contenido: "Contenido",
-      },
-    ];
-    SetArticulos(data);
+    conseguirArticulos();
   }, []);
+
+  const conseguirArticulos = async () => {
+    // 1. CORRECCIÓN: Nombres de variables coincidentes (usar minúsculas es mejor práctica)
+    const url = Global.articulos + "articulos"; 
+    
+    try {
+        // 2. CORRECCIÓN: 'url' debe coincidir con la variable de arriba
+        let peticion = await fetch(url, {
+            method: "GET"
+        });
+
+        let datos = await peticion.json();
+
+        // 3. CORRECCIÓN IMPORTANTE: Tienes que guardar los datos en el estado
+        if(datos.status === "success"){
+            setArticulos(datos.articulos);
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+    
+    setCargando(false);
+  };
 
   return (
     <>
-      {articulos.map((articulo) => {
-        return (
-          <article key ={articulo._id}className="articulo-item">
-            {/* 1. EL TÍTULO VA ARRIBA DEL TODO (OCUPA TODO EL ANCHO) */}
-            <div className="encabezado">
-              <h3 className="title">{articulo.titulo}</h3>
-            </div>
+        {cargando ? "Cargando..." : 
+            
+            articulos.length >= 1 ? 
+                articulos.map((articulo) => {
+                    return (
+                    <article key={articulo._id} className="articulo-item">
+                        {/* 1. EL TÍTULO */}
+                        <div className="encabezado">
+                            <h3 className="title">{articulo.titulo}</h3>
+                        </div>
 
-            {/* 2. EL "CUERPO" CONTIENE LA IMAGEN Y EL TEXTO LADO A LADO */}
-            <div className="cuerpo">
-              {/* Columna Izquierda: Imagen */}
-              <div className="mascara">
-                <img
-                  src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                  alt="Imagen del articulo"
-                />
-              </div>
+                        {/* 2. EL CUERPO */}
+                        <div className="cuerpo">
+                            {/* Imagen */}
+                            <div className="mascara">
+                                <img
+                                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                                alt="Imagen del articulo"
+                                />
+                            </div>
 
-              {/* Columna Derecha: Texto y Botones */}
-              <div className="datos">
-                <p className="description">{articulo.Contenido}</p>
+                            {/* Texto y Botones */}
+                            <div className="datos">
+                                {/* 4. CORRECCIÓN: Seguramente en tu BD es 'contenido' en minúscula */}
+                                <p className="description">{articulo.contenido}</p>
 
-                {/* Botones justo debajo del párrafo */}
-                <div className="acciones">
-                  <button className="button edit">Editar</button>
-                  <button className="button delete">Borrar</button>
-                </div>
-              </div>
-            </div>
-          </article>
-        );
-      })}
+                                <div className="acciones">
+                                    <button className="button edit">Editar</button>
+                                    <button className="button delete">Borrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    );
+                })
+            : <h1>No hay artículos</h1>
+        }
     </>
   );
 };

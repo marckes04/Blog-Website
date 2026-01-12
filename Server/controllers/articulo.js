@@ -199,37 +199,43 @@ const imagen = (req, res) => {
     });
 }
 
-const buscar = (req,res) => {
-    // Sacar el string de busqueda
-    let busqueda = req.params.busqueda;
-    // Find 
-    Articulo.find({"$or":[
-        {"titulo":{"$regex":busqueda, "$options":"i"}},
-        {"contenido":{"$regex":busqueda, "$options":"i"}},
-    ]})
-    //Orden
+const buscar = async (req, res) => {
+    try {
+        // Sacar el string de busqueda
+        let busqueda = req.params.busqueda;
 
-.sort({fecha:-1})
-.exec((error,articulosEncontrados) =>{
-    if(error || !articulosEncontrados|| articulosEncontrados.length <= 0)
-    {
-        return res.status(404). json({
-            status:"error",
-            mensaje:"No se han encontrado articulos"
+        // Find con async/await
+        const articulosEncontrados = await Articulo.find({
+            "$or": [
+                { "titulo": { "$regex": busqueda, "$options": "i" } },
+                { "contenido": { "$regex": busqueda, "$options": "i" } },
+            ]
         })
+        .sort({ fecha: -1 }); // Ordenar
+
+        // Comprobar resultados
+        if (!articulosEncontrados || articulosEncontrados.length <= 0) {
+            return res.status(404).json({
+                status: "error",
+                mensaje: "No se han encontrado artículos"
+            });
+        }
+
+        // Devolver resultado
+        return res.status(200).json({
+            status: "success",
+            articulos: articulosEncontrados
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            status: "error",
+            mensaje: "Error en la búsqueda",
+            error: error.message
+        });
     }
+}
 
-    return res.status(200).json({
-        status: "success",
-        articulos:articulosEncontrados
-    })
-});
-
-
-    //Ejecutar Consulta
-
-    // Devolver Resultado
-} 
 
 
 module.exports = {
