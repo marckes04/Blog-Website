@@ -44,13 +44,21 @@ const crear = async (req, res) => {
 }
 
 const listar = async (req, res) => {
+
     try {
+        // 1. Simulamos el delay de 5 segundos convirtiendo setTimeout en una Promesa (await)
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        // 2. Ahora el código sigue normal, sin callbacks anidados
         let consulta = Articulo.find({});
+        
         if (req.params.ultimos) {
             consulta.limit(3);
         }
+        
         consulta.sort({ fecha: -1 });
-        const articulos = await consulta.exec();
+        
+        const articulos = await consulta.exec(); // Ahora el await funciona perfecto
 
         if (!articulos || articulos.length === 0) {
             return res.status(404).json({
@@ -58,9 +66,15 @@ const listar = async (req, res) => {
                 mensaje: "No se han encontrado artículos!!"
             });
         }
+
         return res.status(200).send({ status: "success", articulos });
+
     } catch (error) {
-        return res.status(500).json({ status: "error", mensaje: "Error consulta", error: error.message });
+        return res.status(500).json({ 
+            status: "error", 
+            mensaje: "Error consulta", 
+            error: error.message 
+        });
     }
 }
 
