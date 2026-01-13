@@ -329,27 +329,6 @@ header h1 {
     text-align: center;
 }
 
-.jumbo{
-    width:85%;
-    padding: 55px;
-    padding-bottom: 75px;
-    background:gray ;
-    border-radius: 10px;
-    box-shadow: 0px 0px 6px #ddd;
-    margin: 25px auto;
-}
-
-.jumbo h1{
-    font-size: 35px;
-    color: #444;
-    text-align: center;
-}
-
-.jumbo p{
-    display: block;
-    margin-bottom: 40px;
-    text-align: center;
-}
 
 /* Efecto Hover (Imprescindible) */
 .button:hover {
@@ -414,12 +393,93 @@ header h1 {
     text-shadow: 0 0 10px #0b70e1;
 }
 
+REEMPLAZO DEL FORMULARIO (JUMBO) - PEGAR AL FINAL
+   ========================================= */
+
+.jumbo {
+    width: 85%;
+    margin: 25px auto;
+    padding: 55px;
+    background: #1e1e1e; /* AHORA ES OSCURO */
+    border-radius: 15px;
+    border: 1px solid #333;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.jumbo h1 {
+    font-size: 35px;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(11, 112, 225, 0.5); /* Tu neón */
+}
+
+.jumbo p {
+    display: block;
+    margin-bottom: 40px;
+    text-align: center;
+    color: #bbb;
+}
+
+/* INPUTS: Fondo negro y borde sutil */
+.jumbo input[type="text"],
+.jumbo textarea,
+.jumbo input[type="file"] {
+    width: 100%;
+    padding: 15px;
+    background: #121212; 
+    border: 2px solid #333;
+    color: white;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    outline: none;
+    font-family: inherit;
+}
+
+/* FOCO: Al hacer clic se ilumina azul */
+.jumbo input[type="text"]:focus,
+.jumbo textarea:focus {
+    border-color: #0b70e1;
+    box-shadow: 0 0 15px rgba(11, 112, 225, 0.3);
+}
+
+.jumbo textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+/* BOTÓN: Igual a los laterales */
+
+.jumbo input[type="submit"], 
+.jumbo .btn-success {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: transparent;
+    border: 2px solid #0b70e1;
+    color: #0b70e1;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.jumbo input[type="submit"]:hover,
+.jumbo .btn-success:hover {
+    background: #0b70e1;
+    color: white;
+    box-shadow: 0 0 20px rgba(11, 112, 225, 0.6);
+}
+
+
 /* =========================================
    7. RESPONSIVE
    ========================================= */
 @media (max-width: 850px) {
     .layout {
-        width: 100%;
+        width: 100%;0
         grid-template-columns: 1fr;
         grid-template-areas: 
             "header"

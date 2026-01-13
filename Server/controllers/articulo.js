@@ -46,8 +46,7 @@ const crear = async (req, res) => {
 const listar = async (req, res) => {
 
     try {
-        // 1. Simulamos el delay de 5 segundos convirtiendo setTimeout en una Promesa (await)
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        
 
         // 2. Ahora el código sigue normal, sin callbacks anidados
         let consulta = Articulo.find({});

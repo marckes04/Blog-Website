@@ -8,7 +8,6 @@ return (
             <li><NavLink to="/inicio">Inicio</NavLink></li>
             <li><NavLink to="/articulos">Articulos</NavLink></li>
             <li><NavLink to="/crear-articulos">Crear Articulos</NavLink></li>
-            <li><a href="#">Contacto</a></li>
         </ul>
     </nav>
     )
