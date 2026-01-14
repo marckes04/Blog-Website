@@ -1,4 +1,5 @@
 import React from 'react'
+import { Global } from '../../helpers/Global';
 
 export const Listado = ({articulos,setArticulos}) => {
   return (
@@ -11,11 +12,16 @@ export const Listado = ({articulos,setArticulos}) => {
                         <div className="cuerpo">
                             <div className="mascara">
                                 {/* OJO: Aquí falta la lógica para mostrar la imagen real si existe */}
-                                <img
-                                src="https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                                
+                                {articulo.imagen !="default.png" &&<img
+                                src={Global.url+ "imagen/"+articulo.imagen}
                                 alt="Imagen del articulo"
-                                />
-                            </div>
+                                />}  
+                                
+                                {articulo.imagen == "default.png" &&<img
+                                src="https://1000logos.net/wp-content/uploads/2025/03/question-mark.png"
+                                alt="Imagen del articulo"
+                                />}            </div>
                             <div className="datos">
                                 <p className="description">{articulo.contenido}</p>
                                 <div className="acciones">

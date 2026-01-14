@@ -12,19 +12,41 @@ export const Crear = () => {
   const guardarArticulo = async (e) => {
     e.preventDefault();
 
-    // Recoger datos del formulario
-    let nuevoArticulo = formulario; 
+    // 1. Recoger datos del formulario
+    let nuevoArticulo = formulario;
 
-    // Guardar articulo en el Backend
-    // OJO: Asegúrate de que Peticion espere un Objeto o un JSON String. 
-    // Normalmente se envía el objeto directo.
+    // 2. Guardar articulo (Datos de texto)
     const { datos } = await Peticion(Global.url + "crear", "POST", nuevoArticulo);
 
     if (datos.status === "success") {
-      // CORRECCIÓN 1: Aquí cambiamos el estado a "guardado"
-      setResultado("guardado");
+
+      // --- PASO CRÍTICO: GESTIÓN DE LA IMAGEN ---
+      
+      const fileInput = document.querySelector("#file");
+
+      // Verificamos si el usuario seleccionó un archivo
+      if (fileInput.files[0]) {
+        
+        const formData = new FormData();
+        formData.append('file0', fileInput.files[0]);
+
+        // Subimos la imagen
+        const subida = await Peticion(Global.url + "subir-imagen/" + datos.articulo._id, "POST", formData, true);
+
+        // AQUI ESTABA EL ERROR: Ahora sí validamos la respuesta de la imagen
+        if (subida.datos.status === "success") {
+          setResultado("guardado");
+        } else {
+          setResultado("error"); // La imagen falló (extensión mala, etc.)
+        }
+
+      } else {
+        // Si no seleccionó imagen, pero el artículo se guardó, entonces es éxito
+        setResultado("guardado");
+      }
+
     } else {
-      // CORRECCIÓN 2: Aquí ponemos el string "error"
+      // Falló al guardar el artículo (texto)
       setResultado("error");
     }
   }
@@ -40,14 +62,14 @@ export const Crear = () => {
       {/* Mensaje de Éxito (Verde) */}
       {resultado === "guardado" && (
         <strong className="alerta alerta-exito">
-           ¡Artículo guardado con éxito!
+          ¡Artículo guardado con éxito!
         </strong>
       )}
 
       {/* Mensaje de Error (Rojo) */}
       {resultado === "error" && (
         <strong className="alerta alerta-error">
-           Los datos proporcionados son incorrectos
+          Los datos proporcionados son incorrectos
         </strong>
       )}
 
