@@ -73,7 +73,7 @@ export const Crear = () => {
     <div className='jumbo'>
 
       <h1>Crear Artículo</h1>
-      <p>Formulario para crear un nuevo artículo</p>
+      <p className='art-edit-post'>Formulario para crear un nuevo artículo</p>
 
       {/* --- MENSAJES DE ALERTA --- */}
       
