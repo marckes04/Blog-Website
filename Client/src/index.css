@@ -1,5 +1,5 @@
 /* =========================================
-   1. CONFIGURACIÓN DARK MODE Y FUENTES
+   1. CONFIGURACIÓN GLOBAL, DARK MODE Y FUENTES
    ========================================= */
 * {
     box-sizing: border-box;
@@ -10,17 +10,17 @@
 body {
     background-color: #121212; /* Fondo casi negro */
     font-family: 'Poppins', sans-serif;
-    color: #e0e0e0; /* Texto blanco suave (no quema la vista) */
+    color: #e0e0e0; /* Texto blanco suave */
 }
 
-/* Layout Principal */
+/* Layout Principal Grid */
 .layout {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
-    background: #1e1e1e; /* Gris oscuro para el contenedor */
+    background: #1e1e1e;
     min-height: 100vh;
-    box-shadow: 0 0 50px rgba(0,0,0,0.5); /* Sombra negra profunda */
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
     
     display: grid;
     grid-template-areas: 
@@ -35,7 +35,7 @@ body {
 }
 
 /* =========================================
-   2. HEADER (Cabecera Oscura)
+   2. HEADER (Cabecera)
    ========================================= */
 header {
     grid-area: header;
@@ -43,26 +43,22 @@ header {
     padding: 35px;
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #333; /* Separador sutil */
+    border-bottom: 2px solid #333;
 }
 
 header h1 {
     font-size: 2.8rem;
     font-weight: 800;
     letter-spacing: 1px;
-    /* Efecto de texto NEÓN */
     color: #fff;
-    text-shadow: 0 0 10px rgba(11, 112, 225, 0.7); 
+    text-shadow: 0 0 10px rgba(11, 112, 225, 0.7); /* Neón */
     text-transform: uppercase;
-    text-align:center;
-    width:100%;
-
+    text-align: center;
+    width: 100%;
 }
 
-
-
 /* =========================================
-   3. NAV (Menú con estilo Neon)
+   3. NAV (Menú)
    ========================================= */
 .nav {
     grid-area: nav;
@@ -92,7 +88,6 @@ header h1 {
     border-bottom: 3px solid transparent;
 }
 
-/* Efecto Hover Brillante */
 .nav li a:hover {
     color: #fff;
     background-color: #252525;
@@ -101,40 +96,14 @@ header h1 {
 }
 
 /* =========================================
-   4. CONTENT (Contenido Principal)
+   4. CONTENT Y TARJETAS (Listado de Artículos)
    ========================================= */
-/* Si tienes una clase para el contenedor de artículos, asegúrate de que use estos colores */
 .content {
     grid-area: content;
     padding: 30px;
     background: #1e1e1e;
 }
 
-/* =========================================
-   5. SIDEBAR (Lateral Dark)
-   ========================================= */
-.lateral {
-    grid-area: lateral;
-    background: #181818; /* Un poco más oscuro que el contenido */
-    padding: 30px;
-    border-left: 2px solid #2c2c2c;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-/* Tarjetas (Widgets) */
-.articulo-item,
-.search, .add {
-    background: #252525; /* Gris medio */
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    border: 1px solid #333;
-}
-
-/* Contenedor principal de cada tarjeta */
-/* Tarjeta Principal */
 .articulo-item {
     background: #1e1e1e;
     border-radius: 15px;
@@ -143,21 +112,19 @@ header h1 {
     margin-bottom: 25px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     transition: transform 0.3s ease;
-    
-    /* Importante: permite que los hijos se acomoden en bloque */
     display: flex;
     flex-direction: column;
 }
 
 .articulo-item:hover {
     transform: translateY(-5px);
-    border-color: #0b70e1; /* Detalle neón al pasar el mouse */
+    border-color: #0b70e1;
 }
 
-/* --- ZONA 1: TÍTULO (ARRIBA) --- */
+/* Encabezado del artículo */
 .encabezado {
     width: 100%;
-    border-bottom: 1px solid #333; /* Una línea sutil debajo del título */
+    border-bottom: 1px solid #333;
     margin-bottom: 15px;
     padding-bottom: 10px;
 }
@@ -165,30 +132,40 @@ header h1 {
 .title {
     margin: 0;
     font-size: 1.8rem;
-    color: #fff;
     text-transform: uppercase;
     letter-spacing: 1px;
-    /* Efecto de texto brillante */
-    text-shadow: 0 0 10px rgba(11, 112, 225, 0.4); 
 }
 
-/* --- ZONA 2: CUERPO (Fila Flexible) --- */
+/* Quitamos el subrayado del link del título */
+.title a {
+    text-decoration: none;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(11, 112, 225, 0.4);
+    transition: color 0.3s;
+}
+
+.title a:hover {
+    color: #0b70e1;
+}
+
+/* Cuerpo del artículo (Imagen + Texto) */
 .cuerpo {
-    display: flex;           /* Pone la imagen y el texto en la misma línea */
-    flex-direction: row;     /* Dirección horizontal */
-    align-items: flex-start; /* Alineados arriba */
-    gap: 20px;               /* Espacio entre imagen y texto */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
 }
 
-/* La Imagen */
+/* Miniatura en el listado */
 .mascara {
-    width: 180px;            /* Ancho fijo */
-    height: 120px;           /* Alto fijo */
-    flex-shrink: 0;          /* Que no se encoja */
+    width: 180px;
+    height: 120px;
+    flex-shrink: 0;
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid #444;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background-color: #000;
 }
 
 .mascara img {
@@ -197,182 +174,222 @@ header h1 {
     object-fit: cover;
 }
 
-/* El Texto (Párrafo + Botones) */
 .datos {
-    flex-grow: 1;            /* Ocupa el resto del espacio */
+    flex-grow: 1;
     display: flex;
-    flex-direction: column;  /* Texto arriba, botones abajo */
+    flex-direction: column;
     justify-content: space-between;
-    height: 100%;            /* Para aprovechar la altura de la imagen */
+    min-height: 120px;
 }
 
 .description {
     color: #ccc;
     font-size: 1rem;
-    margin: 0;
-    margin-bottom: 15px;     /* Espacio antes de los botones */
+    margin: 0 0 15px 0;
     line-height: 1.6;
 }
 
-/* --- ZONA 3: BOTONES --- */
+/* Acciones (Botones Editar/Borrar) */
 .acciones {
     display: flex;
-    gap: 10px;
+    gap: 15px;
+    margin-top: auto; /* Empuja los botones al final */
 }
 
-/* Tus botones estilo Neón */
-.button {
+/* Estilos Generales de Botones */
+.button, 
+.edit, 
+.delete,
+.lateral button,
+.lateral input[type="submit"],
+.jumbo input[type="submit"] {
     padding: 8px 20px;
     background: transparent;
     border: 2px solid #0b70e1; 
     border-radius: 50px;
     color: #0b70e1;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block; /* Corregido: Permite que estén uno al lado del otro */
 }
 
-.button:hover {
+/* Hover Azul */
+.button:hover, 
+.edit:hover,
+.lateral button:hover,
+.lateral input[type="submit"]:hover,
+.jumbo input[type="submit"]:hover {
     background: #0b70e1;
     color: white;
     box-shadow: 0 0 15px rgba(11, 112, 225, 0.6);
+    transform: translateY(-2px);
 }
 
-/* Color especial para el botón borrar */
-.button.delete {
+/* Botón Rojo (Borrar) */
+.button.delete, .delete {
     border-color: #d32f2f;
     color: #d32f2f;
 }
 
-.button.delete:hover {
+.button.delete:hover, .delete:hover {
     background: #d32f2f;
     color: white;
     box-shadow: 0 0 15px rgba(211, 47, 47, 0.6);
 }
 
-/* RESPONSIVE: En móvil, la imagen vuelve arriba */
-@media (max-width: 600px) {
-    .cuerpo {
-        flex-direction: column; /* Cambia a vertical en celulares */
-    }
-    .mascara {
-        width: 100%;
-        height: 180px;
-    }
+/* =========================================
+   5. SIDEBAR (Barra Lateral)
+   ========================================= */
+.lateral {
+    grid-area: lateral;
+    background: #181818;
+    padding: 30px;
+    border-left: 2px solid #2c2c2c;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
-.title {
+.search, .add {
+    background: #252525;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border: 1px solid #333;
+}
+
+.lateral .title {
     margin-bottom: 20px;
     font-size: 1.3rem;
-    color: #0b70e1; /* Azul neón */
+    color: #0b70e1;
     border-bottom: 2px solid #444;
     padding-bottom: 10px;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 1px;
     text-align: center;
 }
 
-/* --- INPUTS ESTILIZADOS (Dark Mode) --- */
 .lateral input[type="text"],
 .lateral textarea {
     width: 100%;
     padding: 15px;
     margin-bottom: 20px;
-    background-color: #121212; /* Fondo negro inputs */
+    background-color: #121212;
     border: 2px solid #333;
     border-radius: 8px;
-    color: white; /* Texto blanco al escribir */
-    font-family: inherit;
-    font-size: 1rem;
+    color: white;
     outline: none;
     transition: all 0.3s;
 }
 
-/* Foco en Inputs (Brillo azul) */
 .lateral input[type="text"]:focus,
 .lateral textarea:focus {
     border-color: #0b70e1;
     box-shadow: 0 0 15px rgba(11, 112, 225, 0.2);
 }
 
-.lateral textarea {
-    min-height: 120px;
-    resize: vertical;
-}
-
-.edit,
-.delete,
-.button 
-{
-    /* 1. ESPACIO Y TAMAÑO */
-    margin-top: 20px;        /* Baja el botón */
-    width: fit-content;      /* El ancho se ajusta al texto (NO al 100%) */
-    display: block;          /* Necesario para poder centrarlo */
-    margin-left: auto;       /* Truco para centrar horizontalmente */
-    margin-right: auto;
-    /* 2. ESTÉTICA (Lo que ya tenías) */
-    padding: 10px 25px;      /* Un poco más de aire a los lados queda mejor */
-    color: #0b70e1;
-    background: transparent;
-    border: 2px solid #0b70e1; 
-    border-radius: 50px;     /* Bordes redondos estilo "pill" */
-    
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    letter-spacing: 1px;
-    text-align: center;
-}
-
-
-/* Efecto Hover (Imprescindible) */
-.button:hover {
-    background: #0b70e1;
-    color: white;
-    box-shadow: 0 0 15px rgba(11, 112, 225, 0.6);
-    transform: translateY(-3px);
-}
 .lateral button,
 .lateral input[type="submit"] {
-    width: 100%;
-    padding: 15px;
-    
-    /* Fondo transparente para resaltar el borde */
-    background: transparent; 
-    color: #0b70e1;
-    
-    /* EL BORDE QUE PEDISTE */
-    border: 2px solid #0b70e1; 
-    border-radius: 50px; /* Bordes muy redondos */
-    
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    letter-spacing: 1px;
-}
-
-/* Efecto Hover en Botones (Se rellenan) */
-.lateral button:hover,
-.lateral input[type="submit"]:hover {
-    background: #0b70e1;
-    color: white;
-    box-shadow: 0 0 20px rgba(11, 112, 225, 0.6); /* Brillo NEÓN intenso */
-    transform: scale(1.02); /* Crece un poquito */
+    width: 100%; /* Botones laterales ocupan todo el ancho */
+    display: block;
 }
 
 /* =========================================
-6. FOOTER (Pie de página)
+   6. JUMBO (Vista Artículo Individual y Formularios)
+   ========================================= */
+.jumbo {
+    width: 90%;
+    margin: 25px auto;
+    padding: 40px;
+    background: #1e1e1e;
+    border-radius: 15px;
+    border: 1px solid #333;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrar todo */
+}
+
+/* IMAGEN GRANDE Y CENTRADA (Corrección pedida) */
+.jumbo .mascara {
+    width: 100%;
+    height: 400px; /* Altura grande para detalle */
+    margin-bottom: 20px;
+    background-color: #121212;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.jumbo .mascara img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Evita que se deforme */
+    object-position: center;
+}
+
+/* Texto del Jumbo */
+.jumbo h1 {
+    font-size: 2.5rem;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(11, 112, 225, 0.5);
+}
+
+.jumbo .fecha {
+    color: #777;
+    font-style: italic;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+}
+
+.jumbo p {
+    text-align: left;
+    line-height: 1.8;
+    color: #bbb;
+    width: 100%;
+    max-width: 800px; /* Para lectura cómoda */
+}
+
+/* Inputs dentro del Jumbo (Formulario Crear/Editar) */
+.jumbo input[type="text"],
+.jumbo textarea,
+.jumbo input[type="file"] {
+    width: 100%;
+    padding: 15px;
+    background: #121212; 
+    border: 2px solid #333;
+    color: white;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    outline: none;
+}
+
+.jumbo input[type="text"]:focus,
+.jumbo textarea:focus {
+    border-color: #0b70e1;
+}
+
+.jumbo textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.jumbo input[type="submit"] {
+    width: 100%;
+    display: block;
+}
+
+/* =========================================
+   7. FOOTER
    ========================================= */
 .footer {
     grid-area: footer;
-    background: #111; /* Negro casi puro */
+    background: #111;
     color: #777;
     text-align: center;
     padding: 40px;
@@ -385,7 +402,6 @@ header h1 {
     color: #0b70e1;
     text-decoration: none;
     font-weight: bold;
-    transition: 0.3s;
 }
 
 .footer a:hover {
@@ -393,93 +409,12 @@ header h1 {
     text-shadow: 0 0 10px #0b70e1;
 }
 
-REEMPLAZO DEL FORMULARIO (JUMBO) - PEGAR AL FINAL
-   ========================================= */
-
-.jumbo {
-    width: 85%;
-    margin: 25px auto;
-    padding: 55px;
-    background: #1e1e1e; /* AHORA ES OSCURO */
-    border-radius: 15px;
-    border: 1px solid #333;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-}
-
-.jumbo h1 {
-    font-size: 35px;
-    color: #fff;
-    text-align: center;
-    margin-bottom: 10px;
-    text-shadow: 0 0 10px rgba(11, 112, 225, 0.5); /* Tu neón */
-}
-
-.jumbo p {
-    display: block;
-    margin-bottom: 40px;
-    text-align: center;
-    color: #bbb;
-}
-
-/* INPUTS: Fondo negro y borde sutil */
-.jumbo input[type="text"],
-.jumbo textarea,
-.jumbo input[type="file"] {
-    width: 100%;
-    padding: 15px;
-    background: #121212; 
-    border: 2px solid #333;
-    color: white;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    outline: none;
-    font-family: inherit;
-}
-
-/* FOCO: Al hacer clic se ilumina azul */
-.jumbo input[type="text"]:focus,
-.jumbo textarea:focus {
-    border-color: #0b70e1;
-    box-shadow: 0 0 15px rgba(11, 112, 225, 0.3);
-}
-
-.jumbo textarea {
-    min-height: 150px;
-    resize: vertical;
-}
-
-/* BOTÓN: Igual a los laterales */
-
-.jumbo input[type="submit"], 
-.jumbo .btn-success {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background: transparent;
-    border: 2px solid #0b70e1;
-    color: #0b70e1;
-    font-size: 1.1rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.jumbo input[type="submit"]:hover,
-.jumbo .btn-success:hover {
-    background: #0b70e1;
-    color: white;
-    box-shadow: 0 0 20px rgba(11, 112, 225, 0.6);
-}
-
-
 /* =========================================
-   7. RESPONSIVE
+   8. RESPONSIVE
    ========================================= */
 @media (max-width: 850px) {
     .layout {
-        width: 100%;0
+        width: 100%; /* Corregido el error del '0' */
         grid-template-columns: 1fr;
         grid-template-areas: 
             "header"
@@ -493,5 +428,15 @@ REEMPLAZO DEL FORMULARIO (JUMBO) - PEGAR AL FINAL
     .lateral {
         border-left: none;
         border-top: 2px solid #333;
+    }
+
+    /* En movil, el listado cambia a vertical */
+    .cuerpo {
+        flex-direction: column;
+    }
+
+    .mascara {
+        width: 100%;
+        height: 200px;
     }
 }
