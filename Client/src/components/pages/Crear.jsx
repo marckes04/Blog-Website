@@ -6,47 +6,65 @@ import { Global } from '../../helpers/Global';
 export const Crear = () => {
 
   const { formulario, enviado, cambiado } = useForm({});
-  // Inicializamos el estado en "no_enviado"
   const [resultado, setResultado] = useState("no_enviado");
 
   const guardarArticulo = async (e) => {
     e.preventDefault();
 
-    // 1. Recoger datos del formulario
+    // ======================================================
+    // 1. VALIDACIÓN PREVIA (Lo nuevo)
+    // ======================================================
+    
+    // Extraemos los valores actuales del formulario
+    let { titulo, contenido } = formulario;
+
+    // REGLA 1: Validar que no estén vacíos o sean muy cortos
+    if (!titulo || !contenido || titulo.length < 3 || contenido.length < 3) {
+        setResultado("error");
+        return; // <--- ESTO DETIENE LA EJECUCIÓN. No sigue bajando.
+    }
+
+    // REGLA 2: (Opcional) Validar el archivo antes de subirlo
+    const fileInput = document.querySelector("#file");
+    
+    // Si quieres obligar a que suban imagen, descomenta esto:
+    /*
+    if (!fileInput.files[0]) {
+        setResultado("error");
+        return; 
+    }
+    */
+
+    // ======================================================
+    // 2. ENVÍO AL BACKEND (Solo llega aquí si pasó la validación)
+    // ======================================================
+
     let nuevoArticulo = formulario;
 
-    // 2. Guardar articulo (Datos de texto)
+    // Guardar articulo (Datos de texto)
     const { datos } = await Peticion(Global.url + "crear", "POST", nuevoArticulo);
 
     if (datos.status === "success") {
 
-      // --- PASO CRÍTICO: GESTIÓN DE LA IMAGEN ---
-      
-      const fileInput = document.querySelector("#file");
-
-      // Verificamos si el usuario seleccionó un archivo
+      // Gestión de Imagen
       if (fileInput.files[0]) {
         
         const formData = new FormData();
         formData.append('file0', fileInput.files[0]);
 
-        // Subimos la imagen
         const subida = await Peticion(Global.url + "subir-imagen/" + datos.articulo._id, "POST", formData, true);
 
-        // AQUI ESTABA EL ERROR: Ahora sí validamos la respuesta de la imagen
         if (subida.datos.status === "success") {
           setResultado("guardado");
         } else {
-          setResultado("error"); // La imagen falló (extensión mala, etc.)
+          setResultado("error");
         }
 
       } else {
-        // Si no seleccionó imagen, pero el artículo se guardó, entonces es éxito
         setResultado("guardado");
       }
 
     } else {
-      // Falló al guardar el artículo (texto)
       setResultado("error");
     }
   }
@@ -57,19 +75,17 @@ export const Crear = () => {
       <h1>Crear Artículo</h1>
       <p>Formulario para crear un nuevo artículo</p>
 
-      {/* --- MENSJES DE ALERTA --- */}
+      {/* --- MENSAJES DE ALERTA --- */}
       
-      {/* Mensaje de Éxito (Verde) */}
       {resultado === "guardado" && (
         <strong className="alerta alerta-exito">
           ¡Artículo guardado con éxito!
         </strong>
       )}
 
-      {/* Mensaje de Error (Rojo) */}
       {resultado === "error" && (
         <strong className="alerta alerta-error">
-          Los datos proporcionados son incorrectos
+          Los datos son incorrectos o faltan campos obligatorios
         </strong>
       )}
 
@@ -83,6 +99,7 @@ export const Crear = () => {
             name='titulo'
             onChange={cambiado}
             placeholder="Ej: Tutorial de React 2024"
+            required // Validación HTML básica
           />
         </div>
 
@@ -92,6 +109,7 @@ export const Crear = () => {
             name="contenido"
             onChange={cambiado}
             placeholder="Escribe el contenido del artículo aquí..."
+            required // Validación HTML básica
           />
         </div>
 
