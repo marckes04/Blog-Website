@@ -24,8 +24,6 @@ return (
                         </div>
                         <div className="cuerpo">
                             <div className="mascara">
-                                {/* OJO: Aquí falta la lógica para mostrar la imagen real si existe */}
-                                
                                 {articulo.imagen !="default.png" &&<img
                                 src={Global.url+ "imagen/"+articulo.imagen}
                                 alt="Imagen del articulo"
